@@ -8,6 +8,7 @@
 
     <include
         android:id="@+id/toolbar"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/filter_view"
         app:layout_constraintTop_toTopOf="parent"
         layout="@layout/toolbar" />
