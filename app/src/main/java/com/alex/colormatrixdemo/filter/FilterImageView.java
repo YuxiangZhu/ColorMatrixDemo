@@ -97,6 +97,23 @@ public class FilterImageView extends FilterView {
         invalidate();
     }
 
+    /**
+     * 修改色温
+     *
+     * @param hue
+     */
+    public void changeHue(float hue) {
+        // mHueMatrix = new ColorMatrix();
+        // mHueMatrix.setSaturation(hue);
+        // // colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
+        // invalidate();
+
+        colorMatrix = new ColorMatrix();
+        colorMatrix.setScale(hue, hue, hue, 1);
+        colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
+        invalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         paint.reset();
