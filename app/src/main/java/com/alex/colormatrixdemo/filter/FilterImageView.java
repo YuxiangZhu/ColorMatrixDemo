@@ -26,7 +26,10 @@ public class FilterImageView extends FilterView {
     private RectF rectF;
     private int drawType = 0;
     private ColorMatrixColorFilter colorMatrixColorFilter;
-    private ColorMatrix colorMatrix;
+    private ColorMatrix mLightnessMatrix;
+    private ColorMatrix mSaturationMatrix;
+    private ColorMatrix mHueMatrix;
+    private ColorMatrix mAllMatrix;
     private int screenWidth = 0;
     private int screenHeight = 0;
     private int maxHeight = 0;
@@ -80,9 +83,12 @@ public class FilterImageView extends FilterView {
      *              明亮度
      */
     public void changeLight(float light) {
-        colorMatrix = new ColorMatrix();
-        colorMatrix.setScale(light, light, light, 1f);
-        colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
+        if (mLightnessMatrix == null) {
+            mLightnessMatrix = new ColorMatrix();
+
+        }
+        mLightnessMatrix.setScale(light, light, light, 1f);
+        // colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
         invalidate();
     }
 
@@ -91,9 +97,24 @@ public class FilterImageView extends FilterView {
      *                    饱和度
      */
     public void changeSaturation(float saturaction) {
-        colorMatrix = new ColorMatrix();
-        colorMatrix.setSaturation(saturaction);
-        colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
+        if (mSaturationMatrix == null) {
+            mSaturationMatrix = new ColorMatrix();
+
+        }
+        mSaturationMatrix.setSaturation(saturaction);
+        // colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
+        invalidate();
+    }
+
+    /**
+     * 修改色温
+     *
+     * @param hue
+     */
+    public void changeHue(float hue) {
+        mHueMatrix = new ColorMatrix();
+        mHueMatrix.setSaturation(hue);
+        // colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
         invalidate();
     }
 
@@ -101,12 +122,24 @@ public class FilterImageView extends FilterView {
     protected void onDraw(Canvas canvas) {
         paint.reset();
         paint.setAntiAlias(true);
-        if (bitmap == null || colorMatrix == null) {
+        if (bitmap == null) {
             return;
         }
         switch (drawType) {
             case DRAW_TYPE_MATRIX:
                 if (colorMatrixColorFilter != null) {
+                    mAllMatrix.reset();
+                    if (mHueMatrix != null) {
+                        mAllMatrix.postConcat(mHueMatrix);
+                    }
+                    if (mSaturationMatrix != null) {
+                        mAllMatrix.postConcat(mSaturationMatrix); // 效果叠加
+
+                    }
+                    if (mLightnessMatrix != null) {
+                        mAllMatrix.postConcat(mLightnessMatrix); // 效果叠加
+                    }
+                    colorMatrixColorFilter = new ColorMatrixColorFilter(mAllMatrix);
                     paint.setColorFilter(colorMatrixColorFilter);
                 }
                 break;
@@ -116,6 +149,7 @@ public class FilterImageView extends FilterView {
                 }
                 break;
         }
+
         canvas.drawBitmap(bitmap, null, rectF, paint);
         canvas.save();
     }
@@ -138,9 +172,9 @@ public class FilterImageView extends FilterView {
 
     @Override
     public void setFloat(float[] floats) {
-        colorMatrix = new ColorMatrix();
-        colorMatrix.set(floats);
-        colorMatrixColorFilter = new ColorMatrixColorFilter(colorMatrix);
+        mAllMatrix = new ColorMatrix();
+        mAllMatrix.set(floats);
+        colorMatrixColorFilter = new ColorMatrixColorFilter(mAllMatrix);
         invalidate();
     }
 

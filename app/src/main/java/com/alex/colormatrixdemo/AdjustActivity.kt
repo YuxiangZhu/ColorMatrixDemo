@@ -53,6 +53,7 @@ class AdjustActivity : AppCompatActivity() {
     private fun doChange(value: Float) {
         when (mCurrentFilter.id) {
             ID_BRIGHT -> filter_view.changeLight(value)
+            ID_TEMPERATURE -> filter_view.changeHue(value)
             ID_SATURATION -> filter_view.changeSaturation(value)
         }
     }
