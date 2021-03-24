@@ -1,4 +1,4 @@
-package com.alex.colormatrixdemo
+package com.alex.colormatrixdemo.filter
 
 import android.graphics.Bitmap
 

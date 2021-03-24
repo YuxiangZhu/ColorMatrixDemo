@@ -1,12 +1,10 @@
-package com.alex.colormatrixdemo
+package com.alex.colormatrixdemo.filter
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.widget.ImageViewCompat
 
 /**
  * Author: alexchu
@@ -19,13 +17,18 @@ import androidx.core.widget.ImageViewCompat
  * 3/23/21 alexchu 1.0
  * Why & What is modified:
  */
-class FilterView @JvmOverloads constructor(
+open class FilterView @JvmOverloads constructor(
     context: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0
 ) :
     AppCompatImageView(
         context,
         attributeSet,
         defStyleAttr), Filter {
+
+    init {
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+    }
+
     override fun setFloat(floats: FloatArray?) {
     }
 
